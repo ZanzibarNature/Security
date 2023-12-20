@@ -78,11 +78,10 @@ public class AuthenticationController : ControllerBase
                     if (response.IsSuccessStatusCode)
                     {
                         var content = await response.Content.ReadAsStringAsync();
-                        dynamic jsonObject = JsonConvert.DeserializeObject(content);
           
                         Response.ContentType = "application/json";
     
-                        return Ok(jsonObject);
+                        return Ok(content);
                     }
                     else
                     {
