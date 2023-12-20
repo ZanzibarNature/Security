@@ -61,8 +61,6 @@ spec:
               value: "true"
             - name: KC_HOSTNAME_STRICT
               value: "false"
-            - name: KC_HOSTNAME_STRICT_HTTPS
-              value: "false"
             - name: KC_METRICS_ENABLED
               value: "true"
             - name: KEYCLOAK_ADMIN
