@@ -75,6 +75,8 @@ spec:
                 configMapKeyRef:
                   name: auth-config
                   key: KEYCLOAK_ADMIN_PASSWORD
+            - name: KC_PROXY
+              value: "edge"
 
           image: zanzibarinh/keycloak:latest
           name: keycloak
