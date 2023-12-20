@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -c
+    kompose.version: 1.31.2 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: authentication-api
+  name: authentication-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: authentication-api
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -c
+        kompose.version: 1.31.2 (HEAD)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/local: "true"
+        io.kompose.service: authentication-api
+    spec:
+      containers:
+        - env:
+            - name: API_URL
+              value: api
+            - name: CLIENT_SECRET
+              value: secret
+            - name: KEYCLOAK_URL
+              value: url
+          image: authentication-api
+          name: authenticationapi
+          resources: {}
+      restartPolicy: Always
+status: {}

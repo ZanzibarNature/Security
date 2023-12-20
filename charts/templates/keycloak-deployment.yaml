@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -c
+    kompose.version: 1.31.2 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: keycloak
+  name: keycloak
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: keycloak
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -c
+        kompose.version: 1.31.2 (HEAD)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/local: "true"
+        io.kompose.service: keycloak
+    spec:
+      containers:
+        - args:
+            - start
+            - --optimized
+          env:
+            - name: JAVA_OPTS_APPEND
+              value: -Dkeycloak.profile.feature.upload_scripts=enabled
+            - name: KC_DB_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                name: auth-config
+                key: KC_DB_PASSWORD
+            - name: KC_DB_URL
+              value: jdbc:postgresql://postgres/keycloak
+            - name: KC_DB_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                name: auth-config
+                key: POSTGRES_USER
+            - name: KC_HEALTH_ENABLED
+              value: "true"
+            - name: KC_HOSTNAME_URL
+              value: http://localhost:8180
+            - name: KC_HTTP_ENABLED
+              value: "true"
+            - name: KC_METRICS_ENABLED
+              value: "true"
+            - name: KEYCLOAK_ADMIN
+              valueFrom:
+                configMapKeyRef:
+                name: auth-config
+                key: KEYCLOAK_ADMIN
+            - name: KEYCLOAK_ADMIN_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                name: auth-config
+                key: KEYCLOAK_ADMIN_PASSWORD
+          image: keycloak
+          name: keycloak
+          resources: {}
+      restartPolicy: Always
+status: {}
