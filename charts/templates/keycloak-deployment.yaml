@@ -61,7 +61,7 @@ spec:
                 configMapKeyRef:
                 name: auth-config
                 key: KEYCLOAK_ADMIN_PASSWORD
-          image: keycloak
+          image: zanzibarinh/keycloak:latest
           name: keycloak
           resources: {}
       restartPolicy: Always

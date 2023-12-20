@@ -27,12 +27,21 @@ spec:
       containers:
         - env:
             - name: API_URL
-              value: api
+              valueFrom:
+                configMapKeyRef:
+                name: auth-config
+                key: API_URL
             - name: CLIENT_SECRET
-              value: secret
+              valueFrom:
+                configMapKeyRef:
+                name: auth-config
+                key: CLIENT_SECRET
             - name: KEYCLOAK_URL
-              value: url
-          image: authentication-api
+              valueFrom:
+                configMapKeyRef:
+                name: auth-config
+                key: KEYCLOAK_URL
+          image: zanzibarinh/authorization-service:latest
           name: authenticationapi
           resources: {}
       restartPolicy: Always
