@@ -45,11 +45,11 @@ spec:
                   key: POSTGRES_USER
             - name: KC_HEALTH_ENABLED
               value: "true"
-            - name: KC_HOSTNAME_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: auth-config
-                  key: KC_HOSTNAME_URL
+            # - name: KC_HOSTNAME_URL
+            #   valueFrom:
+            #     configMapKeyRef:
+            #       name: auth-config
+            #       key: KC_HOSTNAME_URL
             - name: KC_HTTP_ENABLED
               value: "true"
             - name: KC_HOSTNAME_STRICT
