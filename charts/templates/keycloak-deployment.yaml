@@ -46,7 +46,7 @@ spec:
             - name: KC_HEALTH_ENABLED
               value: "true"
             - name: KC_HOSTNAME_URL
-              value: http://localhost:8180
+              value: http://localhost:8080
             - name: KC_HTTP_ENABLED
               value: "true"
             - name: KC_METRICS_ENABLED
