@@ -63,6 +63,8 @@ spec:
               value: "false"
             - name: KC_METRICS_ENABLED
               value: "true"
+            - name: PROXY_ADDRESS_FORWARDING
+              value: "true"
             - name: KEYCLOAK_ADMIN
               valueFrom:
                 configMapKeyRef:
