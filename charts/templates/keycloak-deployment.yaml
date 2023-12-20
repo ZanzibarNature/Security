@@ -34,15 +34,15 @@ spec:
             - name: KC_DB_PASSWORD
               valueFrom:
                 configMapKeyRef:
-                name: auth-config
-                key: KC_DB_PASSWORD
+                  name: auth-config
+                  key: KC_DB_PASSWORD
             - name: KC_DB_URL
               value: jdbc:postgresql://postgres/keycloak
             - name: KC_DB_USERNAME
               valueFrom:
                 configMapKeyRef:
-                name: auth-config
-                key: POSTGRES_USER
+                  name: auth-config
+                  key: POSTGRES_USER
             - name: KC_HEALTH_ENABLED
               value: "true"
             - name: KC_HOSTNAME_URL
@@ -54,13 +54,13 @@ spec:
             - name: KEYCLOAK_ADMIN
               valueFrom:
                 configMapKeyRef:
-                name: auth-config
-                key: KEYCLOAK_ADMIN
+                  name: auth-config
+                  key: KEYCLOAK_ADMIN
             - name: KEYCLOAK_ADMIN_PASSWORD
               valueFrom:
                 configMapKeyRef:
-                name: auth-config
-                key: KEYCLOAK_ADMIN_PASSWORD
+                  name: auth-config
+                  key: KEYCLOAK_ADMIN_PASSWORD
           image: zanzibarinh/keycloak:latest
           name: keycloak
           resources: {}

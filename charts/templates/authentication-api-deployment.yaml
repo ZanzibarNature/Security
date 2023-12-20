@@ -29,18 +29,18 @@ spec:
             - name: API_URL
               valueFrom:
                 configMapKeyRef:
-                name: auth-config
-                key: API_URL
+                  name: auth-config
+                  key: API_URL
             - name: CLIENT_SECRET
               valueFrom:
                 configMapKeyRef:
-                name: auth-config
-                key: CLIENT_SECRET
+                  name: auth-config
+                  key: CLIENT_SECRET
             - name: KEYCLOAK_URL
               valueFrom:
                 configMapKeyRef:
-                name: auth-config
-                key: KEYCLOAK_URL
+                  name: auth-config
+                  key: KEYCLOAK_URL
           image: zanzibarinh/authorization-service:latest
           name: authenticationapi
           resources: {}

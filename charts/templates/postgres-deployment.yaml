@@ -28,13 +28,25 @@ spec:
       containers:
         - env:
             - name: POSTGRES_DB
-              value: keycloak
+              valueFrom:
+                configMapKeyRef:
+                  name: auth-config
+                  key: POSTGRES_DB
             - name: POSTGRES_HOST
-              value: postgres
+              valueFrom:
+                configMapKeyRef:
+                  name: auth-config
+                  key: POSTGRES_USER
             - name: POSTGRES_PASSWORD
-              value: postgres
+              valueFrom:
+                configMapKeyRef:
+                  name: auth-config
+                  key: POSTGRES_PASSWORD
             - name: POSTGRES_USER
-              value: postgres
+              valueFrom:
+                configMapKeyRef:
+                  name: auth-config
+                  key: POSTGRES_USER
           image: postgres:16
           livenessProbe:
             exec:
