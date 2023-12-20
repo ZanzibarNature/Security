@@ -37,7 +37,7 @@ spec:
                   name: auth-config
                   key: KC_DB_PASSWORD
             - name: KC_DB_URL
-              value: jdbc:postgresql://postgres/keycloak
+              value: jdbc:postgresql://postgres:80/keycloak
             - name: KC_DB_USERNAME
               valueFrom:
                 configMapKeyRef:
