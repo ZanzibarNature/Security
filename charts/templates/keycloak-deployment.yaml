@@ -52,6 +52,10 @@ spec:
                   key: KC_HOSTNAME_URL
             - name: KC_HTTP_ENABLED
               value: "true"
+            - name: KC_HOSTNAME_STRICT
+              value: "false"
+            - name: KC_HOSTNAME_STRICT_HTTPS
+              value: "false"
             - name: KC_METRICS_ENABLED
               value: "true"
             - name: KEYCLOAK_ADMIN
@@ -64,6 +68,7 @@ spec:
                 configMapKeyRef:
                   name: auth-config
                   key: KEYCLOAK_ADMIN_PASSWORD
+
           image: zanzibarinh/keycloak:latest
           name: keycloak
           resources: {}
