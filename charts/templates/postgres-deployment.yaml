@@ -31,7 +31,7 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name: auth-config
-                  key: POSTGRES_DB
+                  key: POSTGRES_USER
             - name: POSTGRES_HOST
               valueFrom:
                 configMapKeyRef:
@@ -47,7 +47,7 @@ spec:
                 configMapKeyRef:
                   name: auth-config
                   key: POSTGRES_USER
-          image: registry.redhat.io/rhscl/postgresql-95-rhel7
+          image: registry.redhat.io/rhel9/postgresql-15
           livenessProbe:
             exec:
               command:
