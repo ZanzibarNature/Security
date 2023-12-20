@@ -2,6 +2,7 @@ using System.Net.Http.Headers;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace AuthService.Controllers;
 
@@ -78,10 +79,11 @@ public class AuthenticationController : ControllerBase
                     if (response.IsSuccessStatusCode)
                     {
                         var content = await response.Content.ReadAsStringAsync();
-          
+                        JObject jsonObject = JObject.Parse(content);
+
                         Response.ContentType = "application/json";
     
-                        return Ok(content);
+                        return Ok(jsonObject);
                     }
                     else
                     {
