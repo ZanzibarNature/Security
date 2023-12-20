@@ -27,17 +27,17 @@ spec:
     spec:
       containers:
         - env:
-            - name: POSTGRES_DB
+            - name: POSTGRESQL_DATABASE
               valueFrom:
                 configMapKeyRef:
                   name: auth-config
                   key: POSTGRES_USER
-            - name: POSTGRES_PASSWORD
+            - name: POSTGRESQL_PASSWORD
               valueFrom:
                 configMapKeyRef:
                   name: auth-config
                   key: POSTGRES_PASSWORD
-            - name: POSTGRES_USER
+            - name: POSTGRESQL_USER
               valueFrom:
                 configMapKeyRef:
                   name: auth-config
