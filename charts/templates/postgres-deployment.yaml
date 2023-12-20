@@ -32,11 +32,6 @@ spec:
                 configMapKeyRef:
                   name: auth-config
                   key: POSTGRES_USER
-            - name: POSTGRES_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: auth-config
-                  key: POSTGRES_USER
             - name: POSTGRES_PASSWORD
               valueFrom:
                 configMapKeyRef:
@@ -70,4 +65,3 @@ spec:
         - name: postgres-data
           persistentVolumeClaim:
             claimName: postgres-data
-status: {}
