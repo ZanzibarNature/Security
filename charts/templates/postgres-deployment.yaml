@@ -47,7 +47,7 @@ spec:
                 configMapKeyRef:
                   name: auth-config
                   key: POSTGRES_USER
-          image: postgres:16
+          image: registry.redhat.io/rhscl/postgresql-95-rhel7
           livenessProbe:
             exec:
               command:
