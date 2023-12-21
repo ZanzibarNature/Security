@@ -79,11 +79,11 @@ public class AuthenticationController : ControllerBase
                     if (response.IsSuccessStatusCode)
                     {
                         var content = await response.Content.ReadAsStringAsync();
-                        JObject jsonObject = JObject.Parse(content);
+                        UserResponse userResponse = JsonConvert.DeserializeObject<UserResponse>(content);
 
                         Response.ContentType = "application/json";
     
-                        return Ok(jsonObject);
+                        return Ok(userResponse);
                     }
                     else
                     {
@@ -192,6 +192,15 @@ public class TokenResponse
         public string TokenType { get; set; }
         public int ExpiresIn { get; set; }
         public string RefreshToken { get; set; }
+      
+    }
+public class UserResponse
+    {
+        public string email_verified { get; set; }
+        public string [] roles { get; set; }
+        public string given_name { get; set; }
+        public string family_name { get; set; }
+        public string email { get; set; }
       
     }
 }
