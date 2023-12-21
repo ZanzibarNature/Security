@@ -184,6 +184,35 @@ public class AuthenticationController : ControllerBase
         }
         return BadRequest();
     }
+    
+    [HttpGet("Logout")]
+    public async Task<IActionResult> Logout()
+    {
+        // Retrieve the 'refresh_token' header value
+        if (HttpContext.Request.Headers.TryGetValue("refresh_token", out var refreshToken))
+        {
+            // Extract and process the refresh token value
+            var refreshTokenValue = refreshToken.ToString();
+            var client = new HttpClient();
+            var tokenEndpoint =
+                _KEYCLOAK_URL + "realms/zanzibar-dev/protocol/openid-connect/revoke"; // Replace with your Keycloak token endpoint
+            var content = new FormUrlEncodedContent(new[]
+            {
+                new KeyValuePair<string, string>("token", refreshTokenValue),
+                new KeyValuePair<string, string>("client_id", "auth-service"),
+                new KeyValuePair<string, string>("client_secret", _CLIENT_SECRET),
+            });
+
+            var response = await client.PostAsync(tokenEndpoint, content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var responseContent = await response.Content.ReadAsStringAsync();
+                return Ok(responseContent);
+            }
+        }
+        return BadRequest();
+    }
 
 
 public class TokenResponse
