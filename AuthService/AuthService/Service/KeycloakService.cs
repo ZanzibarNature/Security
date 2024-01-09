@@ -42,12 +42,12 @@ public class KeycloakService
         return null;
     }
 
-    public async Task<Token> GetRefreshToken(string refreshToken)
+    public async Task<Token> RefreshToken(string refreshToken)
     {
         var client = new HttpClient();
         var tokenEndpoint =
             _keycloakUrl +
-            "/token"; 
+            "token"; 
         var content = new FormUrlEncodedContent(new[]
         {
             new KeyValuePair<string, string>("grant_type", "refresh_token"),

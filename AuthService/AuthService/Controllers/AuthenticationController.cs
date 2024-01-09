@@ -82,7 +82,7 @@ public class AuthenticationController : ControllerBase
             var refreshTokenValue = refreshToken.ToString();
             try
             {
-                Token? token = await _authService.GetRefreshToken(refreshTokenValue);
+                Token? token = await _authService.RefreshToken(refreshTokenValue);
                 return token != null ? Ok(token) : Unauthorized();
             }
             catch (Exception e)
