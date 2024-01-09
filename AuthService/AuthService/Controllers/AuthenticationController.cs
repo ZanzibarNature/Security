@@ -60,7 +60,7 @@ public class AuthenticationController : ControllerBase
             try
             {
                 User? user = await _authService.GetUserInfo(accessToken);
-                return user != null ? Ok(user) : Unauthorized();
+                return Ok(user);
             }
             catch (Exception e)
             {
@@ -68,7 +68,7 @@ public class AuthenticationController : ControllerBase
             }
         }
 
-        return BadRequest();
+        return Unauthorized();
     }
 
 
@@ -83,7 +83,7 @@ public class AuthenticationController : ControllerBase
             try
             {
                 Token? token = await _authService.GetRefreshToken(refreshTokenValue);
-                return token != null ? Ok(token) : Unauthorized();
+                return Ok(token);
             }
             catch (Exception e)
             {
@@ -91,7 +91,7 @@ public class AuthenticationController : ControllerBase
             }
         }
 
-        return BadRequest();
+        return Unauthorized();
     }
 
     [HttpGet("Logout")]
@@ -104,8 +104,8 @@ public class AuthenticationController : ControllerBase
             var refreshTokenValue = refreshToken.ToString();
             try
             {
-                await _authService.Logout(refreshTokenValue);
-                return Ok();
+                var response = await _authService.Logout(refreshTokenValue);
+                return Ok(response);
             }
             catch (Exception e)
             {
