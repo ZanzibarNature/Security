@@ -1,6 +1,5 @@
 using System.Net;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
+using Prometheus;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,13 +10,19 @@ builder.Services.AddSwaggerGen();
 
 builder.WebHost.ConfigureKestrel(options =>
 {
-    options.Listen(IPAddress.Any, 8080);
+    options.Listen(IPAddress.Any, 8080);    
 });
 
-var app = builder.Build();
 
+var app = builder.Build();
+app.UseMetricServer();
 app.UseSwagger();
 app.UseSwaggerUI();
+
+app.UseHttpMetrics(options=>
+{
+    options.AddCustomLabel("host", context => context.Request.Host.Host);
+});
 
 app.UseAuthentication();
 
