@@ -41,6 +41,11 @@ spec:
                 configMapKeyRef:
                   name: auth-config
                   key: KEYCLOAK_URL
+            - name: 
+              valueFrom: LOGIN_URL
+                configMapKeyRef:
+                  name: auth-config
+                  key: LOGIN_URL
           image: zanzibarinh/authorization-service:latest
           name: authenticationapi
           resources: {}
