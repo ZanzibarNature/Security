@@ -17,7 +17,7 @@ jobs:
             dotnet-version: 6
         
         - name: Install dependencies
-          run: dotnet restore
+          run: dotnet restore AuthService/AuthService.sln
         
         - name: xUnit tests
           run: dotnet test AuthService/AuthService.Tests/AuthService.Tests.csproj --logger "junit;LogFilePath=TestResults/AuthService.Tests.xml"
