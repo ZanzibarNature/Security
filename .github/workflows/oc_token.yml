@@ -1,0 +1,36 @@
+name: Refresh OpenShift Token
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: '0 12,0 * * *'  # Schedule the workflow to run daily
+
+jobs:
+  refresh-token:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up OpenShift CLI
+        uses: redhat-actions/oc-login@v1
+        with:
+          openshift_server_url: ${{ secrets.OPENSHIFT_SERVER }}
+          openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
+          insecure_skip_tls_verify: true
+
+
+      - name: Set up OpenShift
+        run: |
+          # Log in to OpenShift and refresh token
+          oc whoami -t > new_token.txt
+
+      - name: Update OpenShift Token Secret
+        run: |
+          # Update the GitHub secret with the new token
+          echo "OPENSHIFT_TOKEN=$(cat new_token.txt)" >> $GITHUB_ENV
+          echo "::set-env name=OPENSHIFT_TOKEN::$(cat new_token.txt)"
+          echo "New OpenShift token set as secret."
