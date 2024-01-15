@@ -32,5 +32,5 @@ jobs:
         run: |
           # Update the GitHub secret with the new token
           echo "OPENSHIFT_TOKEN=$(cat new_token.txt)" >> $GITHUB_ENV
-          echo "::set-env name=OPENSHIFT_TOKEN::$(cat new_token.txt)"
+          echo "newtoken=$(cat new_token.txt)" >> $GITHUB_ENV
           echo "New OpenShift token set as secret."
