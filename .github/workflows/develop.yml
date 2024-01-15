@@ -20,8 +20,7 @@ jobs:
           run: dotnet restore AuthService/AuthService.sln
         
         - name: xUnit tests
-          run: dotnet test AuthService/AuthService.Tests/AuthService.Tests.csproj --logger "junit;LogFilePath=TestResults/AuthService.Tests.xml"
-          working-directory: AuthService/AuthService.Tests
+          run: dotnet test AuthService/AuthService.sln
     docker:
         runs-on: ubuntu-latest
         needs: test
