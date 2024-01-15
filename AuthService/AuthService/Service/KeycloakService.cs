@@ -1,21 +1,22 @@
-using Microsoft.AspNetCore.Mvc;
 using System.Net.Http.Headers;
 using AuthService.Models;
+using AuthService.service.Interface;
 using Newtonsoft.Json;
+
 
 namespace AuthService.Service;
 
-public class KeycloakService
+public class KeycloakService : IKeycloakService
 {
-    private string _keycloakUrl = Environment.GetEnvironmentVariable("KEYCLOAK_URL");
-    private string _clientSecret = Environment.GetEnvironmentVariable("CLIENT_SECRET");
-    private string _apiUrl = Environment.GetEnvironmentVariable("API_URL");
+    private readonly string _keycloakUrl = Environment.GetEnvironmentVariable("KEYCLOAK_URL");
+    private readonly string _clientSecret = Environment.GetEnvironmentVariable("CLIENT_SECRET");
+    private readonly string _apiUrl = Environment.GetEnvironmentVariable("API_URL");
+    private readonly string _loginUrl = Environment.GetEnvironmentVariable("LOGIN_URL");
 
     public string GetLoginUrl(string provider)
     {
         string url =
-            _keycloakUrl + "auth" +
-            "?client_id=auth-service" +
+            _loginUrl +
             "&redirect_uri=" + _apiUrl + "/Authentication/external-callback" +
             "&response_type=code" +
             "&scope=openid%20profile%20email%20offline_access%20roles" +
@@ -28,17 +29,23 @@ public class KeycloakService
 
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
         client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-        var response =
-            await client.GetAsync(
-                _keycloakUrl + "userinfo");
-
-        if (response.IsSuccessStatusCode)
+        try
         {
-            var content = await response.Content.ReadAsStringAsync();
-            User user = JsonConvert.DeserializeObject<User>(content);
-            return user;
-        }
+            var response =
+                await client.GetAsync(
+                    _keycloakUrl + "userinfo");
 
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                User user = JsonConvert.DeserializeObject<User>(content);
+                return user;
+            }
+        }
+        catch (Exception e)
+        {
+            return null;
+        }
         return null;
     }
 
@@ -56,22 +63,27 @@ public class KeycloakService
             new KeyValuePair<string, string>("client_secret", _clientSecret),
             new KeyValuePair<string, string>("scope", "openid profile email roles")
         });
-
-        var response = await client.PostAsync(tokenEndpoint, content);
-
-        if (response.IsSuccessStatusCode)
+        try
         {
-            var responseContent = await response.Content.ReadAsStringAsync();
-            var tokenResponse = JsonConvert.DeserializeObject<dynamic>(responseContent);
-
-            Token token = new Token()
+            var response = await client.PostAsync(tokenEndpoint, content);
+            if (response.IsSuccessStatusCode)
             {
-                AccessToken = tokenResponse.access_token,
-                TokenType = tokenResponse.token_type,
-                ExpiresIn = tokenResponse.expires_in,
-                RefreshToken = tokenResponse.refresh_token
-            };
-            return token;
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var tokenResponse = JsonConvert.DeserializeObject<dynamic>(responseContent);
+
+                Token token = new Token()
+                {
+                    AccessToken = tokenResponse.access_token,
+                    TokenType = tokenResponse.token_type,
+                    ExpiresIn = tokenResponse.expires_in,
+                    RefreshToken = tokenResponse.refresh_token
+                };
+                return token;
+            }
+        }
+        catch (Exception e)
+        {
+            return null;
         }
         return null;
     }
@@ -88,15 +100,19 @@ public class KeycloakService
             new KeyValuePair<string, string>("client_id", "auth-service"),
             new KeyValuePair<string, string>("client_secret", _clientSecret),
         });
-
-        var response = await client.PostAsync(tokenEndpoint, content);
-
-        if (response.IsSuccessStatusCode)
-        {
-            var responseContent = await response.Content.ReadAsStringAsync();
-            return responseContent;
+        try
+        { 
+            var response = await client.PostAsync(tokenEndpoint, content);
+            if (response.IsSuccessStatusCode)
+            {
+                var responseContent = await response.Content.ReadAsStringAsync();
+                return responseContent;
+            }
         }
-
+        catch (Exception e)
+        {
+            return null;
+        }
         return null;
     }
     
@@ -117,25 +133,27 @@ public class KeycloakService
                 _apiUrl + "/Authentication/external-callback"), // Your redirect URI
             new KeyValuePair<string, string>("scope", "openid profile email roles")
         });
-
-        var response = await client.PostAsync(tokenEndpoint, content);
-
-        if (response.IsSuccessStatusCode)
-        {
-            var responseContent = await response.Content.ReadAsStringAsync();
-            var tokenResponse = JsonConvert.DeserializeObject<dynamic>(responseContent);
-
-            return new Token()
+        try
+        { 
+            var response = await client.PostAsync(tokenEndpoint, content);
+            if (response.IsSuccessStatusCode)
             {
-                AccessToken = tokenResponse.access_token,
-                TokenType = tokenResponse.token_type,
-                ExpiresIn = tokenResponse.expires_in,
-                RefreshToken = tokenResponse.refresh_token,
-            };
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var tokenResponse = JsonConvert.DeserializeObject<dynamic>(responseContent);
+
+                return new Token()
+                {
+                    AccessToken = tokenResponse.access_token,
+                    TokenType = tokenResponse.token_type,
+                    ExpiresIn = tokenResponse.expires_in,
+                    RefreshToken = tokenResponse.refresh_token,
+                };
+            }
         }
-        else
+        catch (Exception e)
         {
             return null;
         }
+        return null;
     }
 }

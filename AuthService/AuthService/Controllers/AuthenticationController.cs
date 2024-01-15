@@ -1,10 +1,7 @@
-using System.Net.Http.Headers;
 using AuthService.Models;
 using AuthService.Service;
-using Microsoft.AspNetCore.Authentication;
+using AuthService.service.Interface;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace AuthService.Controllers;
 
@@ -13,7 +10,7 @@ namespace AuthService.Controllers;
 public class AuthenticationController : ControllerBase
 {
     private readonly ILogger<AuthenticationController> _logger;
-    private readonly KeycloakService _authService = new KeycloakService();
+    private readonly IKeycloakService _authService = new KeycloakService();
 
     public AuthenticationController(ILogger<AuthenticationController> logger)
     {
@@ -42,10 +39,7 @@ public class AuthenticationController : ControllerBase
         {
             return Ok(tokenResponse);
         }
-        else
-        {
-            return BadRequest();
-        }
+        return BadRequest();
     }
 
     [HttpGet("userinfo")]
