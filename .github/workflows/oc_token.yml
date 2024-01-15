@@ -26,6 +26,7 @@ jobs:
       - name: Set up OpenShift
         run: |
           # Log in to OpenShift and refresh token
+          oc login --token=$(oc whoami -t) ${{ secrets.OPENSHIFT_SERVER }}
           oc whoami -t > new_token.txt
 
       - name: Update OpenShift Token Secret
