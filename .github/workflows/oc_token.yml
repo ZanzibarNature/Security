@@ -29,8 +29,10 @@ jobs:
           oc whoami -t > new_token.txt
 
       - name: Update OpenShift Token Secret
+        env:
+            ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
         run: |
           # Update the GitHub secret with the new token
           echo "OPENSHIFT_TOKEN=$(cat new_token.txt)" >> $GITHUB_ENV
-          echo "newtoken=$(cat new_token.txt)" >> $GITHUB_ENV
+          echo "::set-env name=OPENSHIFT_TOKEN::$(cat new_token.txt)"
           echo "New OpenShift token set as secret."
