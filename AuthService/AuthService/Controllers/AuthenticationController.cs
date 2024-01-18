@@ -24,11 +24,6 @@ public class AuthenticationController : ControllerBase
         return Redirect(url);
     }
 
-    [HttpGet("test")]
-    public IActionResult test()
-    {
-        return Ok("test");
-    }
 
     [HttpGet("external-callback")]
     public async Task<IActionResult> ExternalCallback(string code)
