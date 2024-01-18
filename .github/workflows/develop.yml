@@ -24,6 +24,8 @@ jobs:
     docker:
         runs-on: ubuntu-latest
         needs: test
+        outputs:
+          version: ${{ steps.increment-patch-version.outputs.version }}
         steps:
           - name: Check out code
             uses: actions/checkout@v4
@@ -39,6 +41,24 @@ jobs:
             with:
               username: ${{ secrets.DOCKERHUB_USERNAME }}
               password: ${{ secrets.DOCKERHUB_TOKEN }}
+          - 
+            name: Read current version
+            id: read-version
+            run: echo "::set-output name=version::$(cat version.txt)"
+          
+          - 
+            name: Increment patch version
+            id: increment-patch-version
+            run: echo "::set-output name=version::$(echo ${{ steps.read-version.outputs.version }} | awk -F. '{$3=$3+1; print $0}' OFS=.)"
+              
+          - 
+            name: Write new version
+            run: echo "${{ steps.increment-patch-version.outputs.version }}" > version.txt
+        
+          - 
+            name: Set variable
+            id: set_var
+            run: echo "version=${{ steps.increment-patch-version.outputs.version }}" >> $GITHUB_ENV
           -
             name: Build and push authorization-service
             uses: docker/build-push-action@v5
@@ -46,14 +66,9 @@ jobs:
               context: ./AuthService/AuthService
               push: true
               platforms: linux/amd64,linux/arm64
-              tags: zanzibarinh/authorization-service:latest
-        #   -
-        #     name: Build and push keycloak
-        #     uses: docker/build-push-action@v5
-        #     with:
-        #       push: true
-        #       platforms: linux/amd64,linux/arm64
-        #       tags: zanzibarinh/keycloak:latest
+              tags: |
+                zanzibarinh/authorization-service:latest
+                zanzibarinh/authorization-service:${{ steps.increment-patch-version.outputs.version }}
     deploy:
         runs-on: ubuntu-latest
         needs: docker
@@ -68,6 +83,7 @@ jobs:
               openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
               insecure_skip_tls_verify: true
               namespace: kawa-foundation-app-dev
+
           - name: Set up Helm
             uses: azure/setup-helm@v3
             with:
@@ -75,7 +91,7 @@ jobs:
     
           - name: Deploy with Helm
             run: |
-                helm upgrade --install authentication-service ./charts
+                helm upgrade --install authentication-service --set version=--set version=${{needs.docker.outputs.version}} ./charts
 
 
 

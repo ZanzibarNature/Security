@@ -46,7 +46,7 @@ spec:
                 configMapKeyRef:
                   name: auth-config
                   key: LOGIN_URL
-          image: zanzibarinh/authorization-service:latest
+          image: zanzibarinh/authorization-service:{{ .Values.version }}
           name: authenticationapi
           resources: {}
       restartPolicy: Always
