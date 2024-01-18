@@ -59,6 +59,14 @@ jobs:
             name: Set variable
             id: set_var
             run: echo "version=${{ steps.increment-patch-version.outputs.version }}" >> $GITHUB_ENV
+          - 
+            name: Commit and push new version
+            run: |
+              git config --local user.email "action@github.com"
+              git config --local user.name "GitHub Action"
+              git add version.txt
+              git commit -m "Increment patch version to ${{ steps.increment-patch-version.outputs.version }} [skip ci]"
+              git push
           -
             name: Build and push authorization-service
             uses: docker/build-push-action@v5
