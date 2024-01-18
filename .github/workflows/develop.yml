@@ -99,7 +99,7 @@ jobs:
     
           - name: Deploy with Helm
             run: |
-                helm upgrade --install authentication-service --set version=--set version=${{needs.docker.outputs.version}} ./charts
+                helm upgrade --install authentication-service --set version=${{needs.docker.outputs.version}} ./charts
 
 
 
