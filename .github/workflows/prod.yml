@@ -1,4 +1,4 @@
-name: dev-pipeline
+name: prod-pipeline
 
 on:
   push:
