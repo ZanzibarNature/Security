@@ -88,7 +88,7 @@ spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: keycloak{{.Values.environment}
+    name: keycloak{{.Values.environment}}
   minReplicas: 1
   maxReplicas: 5
   metrics:
