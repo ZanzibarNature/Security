@@ -1,0 +1,55 @@
+name: dev-pipeline
+
+on:
+  push:
+    branches:
+      - 'dev'
+jobs:
+    test:
+      runs-on: ubuntu-latest
+      steps:
+        - name: checkout
+          uses: actions/checkout@v4
+
+        - name: Set up .NET Core
+          uses: actions/setup-dotnet@v3
+          with:
+            dotnet-version: 6
+        
+        - name: Install dependencies
+          run: dotnet restore AuthService/AuthService.sln
+        
+        - name: xUnit tests
+          run: dotnet test AuthService/AuthService.sln
+
+
+    deploy:
+        runs-on: ubuntu-latest
+        needs: test
+        steps:
+          - name: Check out code
+            uses: actions/checkout@v4
+
+          - name: Read version from version.txt
+            id: read_version
+            run: echo "::set-output name=version::$(cat version.txt)"
+    
+          - name: Set up OpenShift CLI
+            uses: redhat-actions/oc-login@v1
+            with:
+              openshift_server_url: ${{ secrets.OPENSHIFT_SERVER }}
+              openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
+              insecure_skip_tls_verify: true
+              namespace: kawa-foundation-app-dev
+
+          - name: Set up Helm
+            uses: azure/setup-helm@v3
+            with:
+              token: ${{ secrets.GITHUB_TOKEN }}
+    
+          - name: Deploy with Helm
+            run: |
+                helm upgrade --install authentication-service --set version=${{ steps.read_version.outputs.version }} --set environment=-prod ./charts
+
+
+

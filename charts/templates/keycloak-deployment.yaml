@@ -6,13 +6,13 @@ metadata:
     kompose.version: 1.31.2 (HEAD)
   creationTimestamp: null
   labels:
-    io.kompose.service: keycloak
-  name: keycloak
+    io.kompose.service: keycloak{{.Values.environment}} 
+  name: keycloak{{.Values.environment}} 
 spec:
   replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: keycloak
+      io.kompose.service: keycloak{{.Values.environment}} 
   strategy: {}
   template:
     metadata:
@@ -22,7 +22,7 @@ spec:
       creationTimestamp: null
       labels:
         io.kompose.network/local: "true"
-        io.kompose.service: keycloak
+        io.kompose.service: keycloak{{.Values.environment}} 
     spec:
       containers:
         - args:
@@ -49,7 +49,7 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name: auth-config
-                  key: KC_HOSTNAME_URL
+                  key: KC_HOSTNAME_URL{{.Values.environment}} 
             - name: KC_TRANSACTION_XA_ENABLED
               value: "false"
             - name: KC_HTTP_ENABLED
@@ -78,3 +78,23 @@ spec:
           resources: {}
       restartPolicy: Always
 status: {}
+
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: keycloak{{.Values.environment}}-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: keycloak{{.Values.environment}
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 50

@@ -3,12 +3,12 @@ kind: PersistentVolumeClaim
 metadata:
   creationTimestamp: null
   labels:
-    io.kompose.service: postgres-data
-  name: postgres-data
+    io.kompose.service: postgres-data{{.Values.environment}} 
+  name: postgres-data{{.Values.environment}} 
 spec:
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 100Mi
+      storage: 1000Mi
 status: {}
