@@ -36,7 +36,7 @@ public class AuthenticationController : ControllerBase
         // Exchange authorization code for access token
         var tokenResponse = await _authService.ExchangeCodeForTokenAsync(code);
 
-        if ( !string.IsNullOrEmpty(tokenResponse.AccessToken))
+        if (tokenResponse != null && !string.IsNullOrEmpty(tokenResponse.AccessToken))
         {
             return Ok(tokenResponse);
         }
