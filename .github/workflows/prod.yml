@@ -3,7 +3,7 @@ name: dev-pipeline
 on:
   push:
     branches:
-      - 'dev'
+      - 'main'
 jobs:
     test:
       runs-on: ubuntu-latest
